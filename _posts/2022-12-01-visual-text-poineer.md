@@ -106,7 +106,7 @@ In LLAVA paper<d-cite key="liu2023llava"></d-cite> , the authors presented an at
 
 ### Parameter-Efficient Tuning
 
-In LLaMA-Adapterd-cite key="zhang2023llamaadapter"></d-cite> , they incorporate visual features by adding representation from the CLIP visual encoder to the learnable adapter prompt prepended at the beginning of the text sequence. 
+In LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite> , they incorporate visual features by adding representation from the CLIP visual encoder to the learnable adapter prompt prepended at the beginning of the text sequence. 
 Zero-init Attention technique is proposed to mitigate the early stage training instability and they show good performance on image-captioning and visual question answering tasks.
 ($$*$$) For this type of modality bridging, we want to investigate what the adaption prompt learned and how the model attends to the adaption prompt when inference.
 
