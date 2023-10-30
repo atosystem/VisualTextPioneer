@@ -205,7 +205,7 @@ We create a interatve visulization in the following.
 
 As expected, the gating factor gradually grows thorughout the training process. We also observed a trend that the gating factors in upper layers tend to have a higher value. This may be resonable because the representations in upper layers are more task specific. So the role of adapters are more crucial to them.
 
-LLaMA-Adapter incoporate visual modality by adding image embeddings(from CLIP) on to each learnble adapter prompts. 
+LLaMA-Adapter incoporate visual modality by adding image embeddings(from CLIP<d-cite key="clip2021"></d-cite>) on to each learnble adapter prompts. 
 
 ($$*$$) For this type of modality bridging, we want to investigate what the adaption prompt learned and how the model attends to the adaption prompt when inference.
 
