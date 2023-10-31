@@ -38,6 +38,7 @@ toc:
     - name: Query-based
     - name: Projection-based
     - name: Parameter-Efficient Tuning
+  - name: Method Comparisons
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
