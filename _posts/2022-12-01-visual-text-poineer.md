@@ -482,7 +482,7 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
   
   * **Llama Adapter Response:** There are so many people on the ocean because they are enjoying a beach day, spending time together, and participating in various activities such as swimming, sunbathing, or simply relaxing. The beach is a popular destination for people to unwind, socialize, and engage in recreational activities. The presence of many people on the beach indicates that it is a popular spot for leisure and relaxation.
 
-**Prompt for picture:  Why there are so many people on the ocean?**
+**Prompt for picture:  Why there are so many people on the ocean? Note that the image might be unrelated to this question.**
   * **Instruct BLIP (7B) Response:** no
   * **LLaVA-1.5 (7B) Response:** 
   
