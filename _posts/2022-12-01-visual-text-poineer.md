@@ -326,9 +326,6 @@ In this section, we perform qualitative analysis by utilizing various images and
 
     In this advanced category, the model is presented with subtle visual cues and need to infer the implicit relationships that are not immediately apparent. This evaluates the model's ability of in-depth thinking and complex visual understanding.
 
-#### Qualitative Analysis - Robustness
-To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
-
 <!-- Adding bed image below and adding prompt in red , and responses of different models in different colors -->
 #### Images for qualitiatve analysis and Model Responses
 
@@ -420,3 +417,8 @@ Hospital Scenario
   * **LLaVA-1.5 (7B) Response:** The magnifying glass is placed over the antique map, which is a vintage, hand-drawn map of the world. The magnifying glass is used to examine the details of the map more closely, providing a better understanding of the geographical features and information displayed on the map. The magnifying glass enhances the visual experience by allowing the viewer to see the intricate details and nuances of the antique map, which might not be easily discernible without the aid of the magnifying glass. This combination of the magnifying glass and the antique map creates a visually engaging and educational experience for the viewer.
   
   * **Llama Adapter Response:** The magnifying glass is used to enhance the view of the antique map, allowing the viewer to see more details and possibly identify specific locations or features on the map more easily. The magnifying glass can be helpful in studying the map's content, such as historical events, geographical features, or cultural aspects, as it can provide a closer and clearer view of the map's details.
+
+
+
+#### Qualitative Analysis - Robustness
+To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
