@@ -282,19 +282,32 @@ LLaMA-Adapter incoporate visual modality by adding image embeddings(from CLIP<d-
 
 ($$*$$) For this type of modality bridging, we want to investigate what the adaption prompt learned and how the model attends to the adaption prompt when inference.
 
-## Method Comparisons
+#### Quantitative Analysis - ScienceQA 
+
+| Method |  Val Acc (%)  |
+| -------- | -------- |
+| BLIP-2(Vicuna-7B)<d-cite key="li2023blip2"></d-cite> | 77.3 |
+| InstructBLIP(Vicuna-7B)<d-cite key="instructblip"></d-cite>     |  79.5   |
+| LLaVA<d-cite key="liu2023llava"></d-cite>     |  90.9   |
+| LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>     |  85.2   |
+
 #### Qualitative Analysis - Different types of Image and Prompts
 In this section, we perform qualitative analysis by utilizing various images and prompts to explore distinct forms of visual reasoning across three methods. Within this analysis, we categorize our visual reasoning into six distinct types, as outlined below:
 
-1. Emotion / Atmosphere Inference
+1. Emotion / Atmosphere Inference:
+
     In this category, we present the model with an image carefully chosen to evoke specific emotions or atmospheric qualities. The challenge for the model is to understand the underlying emotional tone or ambiance depicted in the image. This category tests the model's ability to utilize visual cues such as lighting, colors, or even implicit reasoning to analyze the emotional atmosphere captured in the image.
+
 2. Create a Backstory:
+
     In this category, we prompt the model to construct a compelling and detailed backstory for the characters, places, or objects depicted. This category tests the model's creativity and imagination to contextualize visual information and create engaging stories using the visual cues provided in the image.
 
 4. Predict Future:
+
     In this category, we prompt the model to predict the future. It evaluates the model's foresight and its ability to infer future scenarios, demonstrating its understanding of causal relationships and the dynamics of the depicted scene.
 
 5. Explain Object-Object Relationship:
+
     In this category, the model is prompted to reason the connections, interactions, or dependencies between different objects. This category tests the model's ability to reason the probable relationship between objects in the image.
 
 6. Explain Human-Object Relationship:
@@ -306,10 +319,15 @@ In this section, we perform qualitative analysis by utilizing various images and
     In this category, the model is expected to capture the nature of human's relationship — whether it is friendly, adversarial, familial, romantic, or professional. This task assesses the model's proficiency in understanding human emotions and social cues, enabling it to discern complex human relationships.
 
 8. Confusing Image:
+
     In this category, the model is presented with an confusing image that might be unusual compared to commonsense. This task evaluates the model's capacity to capture the uncommon part and interpret it.
 
 9. Implicit Relationship Inference:
+
     In this advanced category, the model is presented with subtle visual cues and need to infer the implicit relationships that are not immediately apparent. This evaluates the model's ability of in-depth thinking and complex visual understanding.
+
+#### Qualitative Analysis - Robustness
+To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
 
 <!-- Adding bed image below and adding prompt in red , and responses of different models in different colors -->
 #### Images for qualitiatve analysis and Model Responses
