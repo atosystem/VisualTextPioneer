@@ -302,7 +302,7 @@ LLaMA-Adapter out perform previous LLM on ScienceQA.
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_scienceQA.png" class="img-fluid" %}
 
 <div class="caption">
-Question Answering Accuracy (%) on ScienceQA’s [41] test set. "T" denotes the single-modal model with text-only input.
+Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the single-modal model with text-only input.
 </div>
 
 
