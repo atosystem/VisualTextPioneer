@@ -205,7 +205,7 @@ The visual information is integrated into the LLaMA model by adding different sc
 In the LLaMA Adapter, they propose a new training method **Zero-init Gated Attention**. 
 When fintuning with adapters in the early training stage, it is often unstable. 
 The reason is that the pretrained model has not yet learned how to utilize the newly injected adapter modules. 
-To this end, in the LLaMA adapter, the authors introduce a gating factor $$\alpha$$ on the adapter part of the attention score before multiplying the values in the attention layer.
+To this end, in the LLaMA adapter, the authors introduce a gating factor $$\mathbf{g}_l$$ on the adapter part of the attention score before multiplying the values in the attention layer.
 Their ablation studies further substantiate the advantage of this proposed method.
 
 The contributions of LLaMA can be summarized as the following:
