@@ -302,7 +302,7 @@ LLaMA-Adapter out perform previous LLM on ScienceQA.
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_scienceQA.png" class="img-fluid" %}
 
 <div class="caption">
-Question Answering Accuracy (%) on ScienceQA’s [41] test set. "T" denotes the single-modal model with text-only input.
+Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the single-modal model with text-only input.
 </div>
 
 
@@ -362,11 +362,8 @@ In this section, we perform qualitative analysis by utilizing various images and
 
 <div class="row mt-1">
     <div class="col-sm mt-1 mt-md-0">
-        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/image_prompt/bed.png" class="img-fluid rounded" %}
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/image_prompt/bed.jpg" class="img-fluid rounded" %}
     </div>
-    <div class="caption">
-Hospital Scenario
-</div>
 </div>
 
 
