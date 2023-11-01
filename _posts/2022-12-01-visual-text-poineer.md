@@ -493,13 +493,13 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
 
 **Prompt for picture:  Where is the man with the red hat?**
   * **Instruct BLIP (7B) Response:** The man with the red hat is standing under an umbrella in the rain.
-  * **LLaVA-1.5 (7B) Response:** 
+  * **LLaVA-1.5 (7B) Response:**The man with the red hat is not visible in the image. The focus is on the open umbrella and the raindrops falling around it. 
   
   * **Llama Adapter Response:** The man with the red hat is standing in the rain, holding the umbrella to protect himself from the rain.
 
 **Prompt for picture:  Where is the man with the red hat? Note that the image might be unrelated to this question.**
   * **Instruct BLIP (7B) Response:** behind umbrella
-  * **LLaVA-1.5 (7B) Response:** 
+  * **LLaVA-1.5 (7B) Response:** The man with the red hat is not visible in the image. The image features a close-up of a black umbrella in the rain, with water droplets falling on it. 
   
   * **Llama Adapter Response:** The man with the red hat is not visible in the image. The image only shows the umbrella and the raindrops on the umbrella.
 
@@ -512,12 +512,12 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
 
 **Prompt for picture:  Why there are so many people on the ocean?**
   * **Instruct BLIP (7B) Response:** There are no people on the ocean in the image.
-  * **LLaVA-1.5 (7B) Response:** 
+  * **LLaVA-1.5 (7B) Response:** There are no people on the ocean in the image. The scene features a sandy beach with a tree and a dune, and the sky is orange, suggesting a sunset. The absence of people on the ocean could be due to various reasons, such as the time of day, weather conditions, or the location being a remote or less popular beach. It is also possible that the image was taken during a time when the beach is not crowded, such as early morning or late evening, when fewer people are visiting the beach.
   
   * **Llama Adapter Response:** There are so many people on the ocean because they are enjoying a beach day, spending time together, and participating in various activities such as swimming, sunbathing, or simply relaxing. The beach is a popular destination for people to unwind, socialize, and engage in recreational activities. The presence of many people on the beach indicates that it is a popular spot for leisure and relaxation.
 
 **Prompt for picture:  Why there are so many people on the ocean? Note that the image might be unrelated to this question.**
   * **Instruct BLIP (7B) Response:** no
-  * **LLaVA-1.5 (7B) Response:** 
+  * **LLaVA-1.5 (7B) Response:** The image shows a sandy desert landscape with a lone tree and a dune. There are no people visible in the image, so it is not possible to determine why there are so many people on the ocean. The image is focused on the desert environment and the lone tree, and the ocean is not a part of the scene 
   
   * **Llama Adapter Response:** There could be several reasons for the presence of so many people on the ocean. Some possible explanations include:1. Recreational activities: The ocean might be a popular destination for beachgoers, surfers, swimmers, or sunbathers, who enjoy spending time in the water and on the sand.2. Tourism: The ocean could be part of a popular tourist destination, attracting visitors from all over the world.3. Events: The ocean might be the location of a special event, such as a beach festival, a concert, or a sports competition, drawing a large crowd of spectators.4. Emergency: The ocean could be the scene of an emergency, such as a natural disaster, a search and rescue operation, or a mass evacuation.In any case, the image does not provide enough information to determine the exact reason for the large number of people on the ocean.
