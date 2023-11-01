@@ -175,6 +175,10 @@ In this section, we chose the works  LLaVA <d-cite key="liu2023llava"></d-cite> 
 * The paper highlights that the amount of multimodal data (text, image) pairs have increased over time. However, the amount of instruction following multimodal data is still limited because the process is time-consuming and not well structured for human crowd source data collection. Therefore, the paper utilized language only GPT-4 model to generate three different type of data (conversation styled, detailed description, compelx reasoning) by only prompting the model with image description and the bounding box of the object present in the image.
 * Secondly, the authors presented an end-to-end model using off-the-shelf image encoder (Clip Visual encoder ViT-L/14) and LLM (Llama) by mapping the representations of the vision model to the same higher dimensional textual embedding space using a linear projection layer.
 
+## LLaVA Model Architecture
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_model_architecture.png" class="img-fluid" %}
+
+As LLaVA model relies on off-the-shelf pretrained vision and language models and these models maps their input to a separate high dimensional space. However, to effectively leverage their capabilites (i.e., jointly use the information captured by vision and language embeddings), the embeddings have to be mapped closer in the same higher dimensional space. 
 
 
 ### Parameter-Efficient Tuning
@@ -339,10 +343,11 @@ Hospital Scenario
 </div>
 
 
+**<mark>Emotion/Atmosphere Inference</mark>**<br>
 **Prompt for picture: Describe the emotions and atmosphere depicted in the image. Explore the feelings that this setting might evoke in a person and elaborate on the ambiance of the room.**
-  * **Instruct BLIP (7B) Response:** In the image, a woman is lying in a hospital bed with an intravenous (IV) drip attached to her arm. She appears to be in pain or discomfort, as she is covering her face with her hands. The room is dimly lit, which adds to the sense of unease and vulnerability. The presence of medical equipment, such as the IV drip and the bottle of pills on the nightstand, further emphasizes the seriousness of the situation. The overall atmosphere is one of sadness, fear, and concern for the woman's well-being.
-  * **LLaVA-1.5 (7B) Response:** The image depicts a woman kneeling beside a hospital bed, with her hands covering her face. The emotions and atmosphere in the scene are likely to be somber, sad, or even distressed. The woman's posture and facial expression suggest that she is experiencing a range of emotions, such as grief, worry, or concern for the person lying in the bed.\n\nThe ambiance of the room is likely to be quiet, calm, and somewhat solemn. The hospital setting, with its white sheets and bed, creates a sense of tranquility and peace, but the presence of the woman's emotional distress adds a layer of complexity to the scene. The room's atmosphere might evoke feelings of empathy, support, and concern for the woman and the person in the bed, as well as a sense of vulnerability and helplessness.
-  * **Llama Adapter Response:** The image depicts a woman sitting on a bed in a hospital room, with her head in her hands, looking down. This scene evokes feelings of sadness, worry, and concern. The woman's posture and facial expression suggest that she is experiencing emotional distress, possibly due to a health issue or the recent loss of a loved one. The hospital setting adds to the sense of urgency and uncertainty, as it implies that she might be in a critical or unstable situation. The dimly lit room further contributes to the atmosphere of solitude and vulnerability, as it emphasizes the woman's isolation and the importance of her emotional state. The presence of a bed and a chair in the room suggests that she might be in a recovery or recovery-related setting, which adds to the overall sense of concern and worry.
+  * **Instruct BLIP (7B) Response:** In the image, <span style="color:red">a woman is lying in a hospital bed with an intravenous (IV) drip attached to her arm. She appears to be in pain or discomfort, as she is covering her face with her hands</span>. The room is dimly lit, which adds to the sense of unease and vulnerability. The presence of medical equipment, such as the IV drip and the bottle of pills on the nightstand, further emphasizes the seriousness of the situation. The overall atmosphere is one of sadness, fear, and concern for the woman's well-being.
+  * **LLaVA-1.5 (7B) Response:** The image depicts a woman kneeling beside a hospital bed, with her hands covering her face. <span style="color:green">The emotions and atmosphere in the scene are likely to be somber, sad, or even distressed. The woman's posture and facial expression suggest that she is experiencing a range of emotions, such as grief, worry, or concern for the person lying in the bed</span>.\n\nThe ambiance of the room is likely to be quiet, calm, and somewhat solemn. The hospital setting, with its white sheets and bed, creates a sense of tranquility and peace, but the presence of the woman's emotional distress adds a layer of complexity to the scene. The room's atmosphere might evoke feelings of empathy, support, and concern for the woman and the person in the bed, as well as a sense of vulnerability and helplessness.
+  * **Llama Adapter Response:** The image depicts a woman sitting on a bed in a hospital room, with her head in her hands, looking down.<span style="color:green"> This scene evokes feelings of sadness, worry, and concern. The woman's posture and facial expression suggest that she is experiencing emotional distress, possibly due to a health issue or the recent loss of a loved one</span>. The hospital setting adds to the sense of urgency and uncertainty, as it implies that she might be in a critical or unstable situation. The dimly lit room further contributes to the atmosphere of solitude and vulnerability, as it emphasizes the woman's isolation and the importance of her emotional state. The presence of a bed and a chair in the room suggests that she might be in a recovery or recovery-related setting, which adds to the overall sense of concern and worry.
 
 
 <div class="row mt-1">
@@ -351,10 +356,11 @@ Hospital Scenario
   </div>
 </div>
 
+**<mark>Confusing Image</mark>**<br>
 **Prompt for picture:  What is the unusual of this picture?**
-  * **Instruct BLIP (7B) Response:** The unusual aspect of this picture is that there is a man, a woman, and two children climbing on a rock.
-  * **LLaVA-1.5 (7B) Response:** The unusual aspect of this picture is that a man is squatting down to pick up a child, while another child is standing on his shoulders. This is an unconventional and potentially dangerous situation, as it is not common for a person to carry a child in such a manner. The man's posture and the children's positioning make the scene quite unique and intriguing.
-  * **Llama Adapter Response:** The unusual aspect of this picture is that a man is holding three children on his back, with one child sitting on each of his shoulders. This is an unconventional way of carrying children, as it is not common to see adults carrying children in such a manner.
+  * **Instruct BLIP (7B) Response:** <span style="color:red">The unusual aspect of this picture is that there is a man, a woman, and two children climbing on a rock.</span>
+  * **LLaVA-1.5 (7B) Response:** <span style="color:green">The unusual aspect of this picture is that</span> <span style="color:red"> a man</span> <span style="color:green">is squatting down to pick up a child, while another child is standing on his shoulders</span>. This is an unconventional and potentially dangerous situation, as it is not common for a person to carry a child in such a manner. The man's posture and the children's positioning make the scene quite unique and intriguing.
+  * **Llama Adapter Response:** <span style="color:red"> The unusual aspect of this picture is that a man is holding three children on his back, with one child sitting on each of his shoulders.</span>This is an unconventional way of carrying children, as it is not common to see adults carrying children in such a manner.
 
 
 
@@ -365,10 +371,11 @@ Hospital Scenario
   </div> 
 </div>
 
+**<mark>Explain Human-Human Relationship</mark>**<br>
 **Prompt for picture:  What is the relationship of these two people?**
-  * **Instruct BLIP (7B) Response:** The two people in the image are a man and a woman, and they appear to be in a romantic relationship.
-  * **LLaVA-1.5 (7B) Response:** The relationship between the two people in the image is not explicitly clear, but they appear to be a couple or a close pair, as they are lying down together on a blanket and looking at something.
-  * **Llama Adapter Response:** The relationship of these two people is that of a couple, as they are lying together on the grass and looking at each other.
+  * **Instruct BLIP (7B) Response:** <span style="color:red">The two people in the image are a man and a woman, and they appear to be in a romantic relationship.</span>
+  * **LLaVA-1.5 (7B) Response:** The relationship between the two people in the image is not explicitly clear, <span style="color:green">but they appear to be a couple or a close pair,</span> as they are lying down together on a blanket and looking at something.
+  * **Llama Adapter Response:** <span style="color:green">The relationship of these two people is that of a couple</span>, as they are lying together on the grass and looking at each other.
 
 
 <div class="row mt-1">
@@ -377,10 +384,11 @@ Hospital Scenario
   </div> 
 </div>
 
+**<mark>Predict Future</mark>**<br>
 **Prompt for picture:  What might happen next?**
-  * **Instruct BLIP (7B) Response:** In the image, two men are engaged in a sword-fighting match, with one man holding a sword above his head while the other man holds a sword in his hand. It is uncertain what might happen next, as the scene is ongoing and the outcome of the fight is unknown. However, it is likely that the two men will continue to engage in the sword-fighting match, exchanging blows and trying to gain an advantage over their opponent. Depending on the level of skill and experience between the two fighters, the outcome of the match could range from a draw to a decisive victory for one of the participants.
-  * **LLaVA-1.5 (7B) Response:** In the image, a man is holding a sword and appears to be about to strike another man who is also holding a sword. The scene suggests that they might be engaged in a sword fight or a confrontation. It is possible that the outcome of this interaction could be one of several scenarios, such as the two men continuing their fight, one of them backing off or surrendering, or even a friendly sparring match. The exact outcome depends on the context of the situation and the intentions of the individuals involved.
-  * **Llama Adapter Response:** In the image, a man is holding a sword and is about to strike another man who is holding a sword. The scene is set in a battlefield, and the two men are engaged in a sword fight. The outcome of the fight is uncertain, but it could lead to a variety of outcomes, such as one of the men being injured or killed, or the fight ending in a draw. The outcome depends on the skill level, strategy, and determination of the two combatants.
+  * **Instruct BLIP (7B) Response:** In the image, two men are engaged in a sword-fighting match, with one man holding a sword above his head while the other man holds a sword in his hand.<span style="color:green"> It is uncertain what might happen next, as the scene is ongoing and the outcome of the fight is unknown. However, it is likely that the two men will continue to engage in the sword-fighting match, exchanging blows and trying to gain an advantage over their opponent.</span> Depending on the level of skill and experience between the two fighters, the outcome of the match could range from a draw to a decisive victory for one of the participants.
+  * **LLaVA-1.5 (7B) Response:** In the image, a man is holding a sword and appears to be about to strike another man who is also holding a sword. The scene suggests that they might be engaged in a sword fight or a confrontation. <span style="color:green">It is possible that the outcome of this interaction could be one of several scenarios, such as the two men continuing their fight, one of them backing off or surrendering, or even a friendly sparring match. The exact outcome depends on the context of the situation and the intentions of the individuals involved.</span>
+  * **Llama Adapter Response:** In the image, a man is holding a sword and is about to strike another man who is holding a sword. The scene is set in a battlefield, and the two men are engaged in a sword fight. <span style="color:green">The outcome of the fight is uncertain, but it could lead to a variety of outcomes, such as one of the men being injured or killed, or the fight ending in a draw. The outcome depends on the skill level, strategy, and determination of the two combatants.</span>
   
 
 <div class="row mt-1">
@@ -389,6 +397,7 @@ Hospital Scenario
   </div> 
 </div>
 
+**<mark>Create a Backstory</mark>**<br>
 **Prompt for picture:  Invent a detailed backstory for the abandoned old house.**
   * **Instruct BLIP (7B) Response:** The abandoned old house in the image is situated in the middle of a dense forest, surrounded by trees and shrubs. It appears to be a spooky and mysterious place, adding to the eerie atmosphere of the scene. The house has a large balcony on the second floor, which further enhances its creepy appearance. The backstory for this abandoned house could involve a tragic event that led to its abandonment, such as a natural disaster, a family tragedy, or a supernatural occurrence. Alternatively, the house could have been left uninhabited due to financial or social reasons, leaving it to decay and become a haunting presence in the forest.
   * **LLaVA-1.5 (7B) Response:** The abandoned old house, with its white exterior and black shutters, sits on a hillside surrounded by trees. It was once a grand and stately home, built in the early 20th century by a wealthy family who had a deep love for nature and the tranquility of the forest. The house was designed with a blend of architectural styles, featuring a mix of Victorian and Gothic elements.\n\nOver the years, the family's descendants continued to maintain the house, preserving its beauty and charm. However, as time passed, the family's fortunes began to decline, and they were forced to sell the house to pay off debts. The new owners, who were not as attentive to the house's upkeep, allowed it to deteriorate.\n\nThe house's current state, with its peeling paint and broken shutters, reflects the passage of time and the neglect it has suffered. The surrounding trees have grown taller, and the house has become a relic of the past, a testament to the family's once-great legacy.
@@ -401,10 +410,11 @@ Hospital Scenario
   </div> 
 </div>
 
+**<mark>Explain Human-Object Relationship</mark>**<br>
 **Prompt for picture:  What is this picture about? What's the feeling of the people and why they have such feelings?**
-  * **Instruct BLIP (7B) Response:** The image depicts two young children, a boy and a girl, sitting on a couch while eating slices of lemon. They seem to be enjoying their snack, as they are smiling and laughing together. It is likely that they are experiencing a positive emotional state, such as happiness or contentment, due to their shared enjoyment of the lemon slices. This scene captures a moment of joy and camaraderie between the two children, emphasizing the importance of spending quality time together and savoring simple pleasures in life.
-  * **LLaVA-1.5 (7B) Response:** The image features two children, a boy and a girl, sitting next to each other and eating lemon wedges. They both have a sad or unhappy expression on their faces. The reason for their sadness could be due to the taste of the lemon wedges, which are known to be sour and can be unpleasant for some people. Alternatively, their sadness might be unrelated to the lemon wedges and could be due to other factors, such as personal issues or emotions. The children's expressions and actions suggest that they are not enjoying the experience of eating the lemon wedges.
-  * **Llama Adapter Response:** The image depicts a young boy and a young girl sitting on a bench, each holding a yellow banana. They appear to be enjoying their time together, possibly sharing a snack or a meal. The girl is smiling, which suggests that she is happy and content, while the boy is making a face, which could indicate that he is amused, surprised, or simply expressing his emotions. The combination of the girl's smile and the boy's facial expression creates a playful and lighthearted atmosphere, suggesting that they are having a fun and carefree moment together.
+  * **Instruct BLIP (7B) Response:** The image depicts two young children, a boy and a girl, sitting on a couch while eating slices of lemon.<span style="color:red"> They seem to be enjoying their snack, as they are smiling and laughing together. It is likely that they are experiencing a positive emotional state, such as happiness or contentment, due to their shared enjoyment of the lemon slices.</span> This scene captures a moment of joy and camaraderie between the two children, emphasizing the importance of spending quality time together and savoring simple pleasures in life.
+  * **LLaVA-1.5 (7B) Response:** <span style="color:green">The image features two children, a boy and a girl, sitting next to each other and eating lemon wedges. They both have a sad or unhappy expression on their faces. The reason for their sadness could be due to the taste of the lemon wedges, which are known to be sour and can be unpleasant for some people.</span> Alternatively, their sadness might be unrelated to the lemon wedges and could be due to other factors, such as personal issues or emotions. The children's expressions and actions suggest that they are not enjoying the experience of eating the lemon wedges.
+  * **Llama Adapter Response:** <span style="color:red"> The image depicts a young boy and a young girl sitting on a bench, each holding a yellow banana. They appear to be enjoying their time together, possibly sharing a snack or a meal.</span> The girl is smiling, which suggests that she is happy and content, while the boy is making a face, which could indicate that he is amused, surprised, or simply expressing his emotions. The combination of the girl's smile and the boy's facial expression creates a playful and lighthearted atmosphere, suggesting that they are having a fun and carefree moment together.
 
 <div class="row mt-1">
    <div class="col-sm mt-3 mt-md-0">
@@ -412,11 +422,35 @@ Hospital Scenario
   </div> 
 </div>
 
+**<mark>Explain Object-Object Relationship</mark>**<br>
 **Prompt for picture:  Explain the relationship between the magnifying glass and the antique map.**
-  * **Instruct BLIP (7B) Response:** The relationship between the magnifying glass and the antique map is that the magnifying glass is placed on top of the map, allowing the viewer to examine the details of the map more closely. By using the magnifying glass, the viewer can gain a better understanding of the map's features, such as geographical locations, landmarks, and other details that might be difficult to see with the naked eye. The magnifying glass serves as a tool to enhance the viewing experience of the antique map, making it more informative and engaging for the viewer.
-  * **LLaVA-1.5 (7B) Response:** The magnifying glass is placed over the antique map, which is a vintage, hand-drawn map of the world. The magnifying glass is used to examine the details of the map more closely, providing a better understanding of the geographical features and information displayed on the map. The magnifying glass enhances the visual experience by allowing the viewer to see the intricate details and nuances of the antique map, which might not be easily discernible without the aid of the magnifying glass. This combination of the magnifying glass and the antique map creates a visually engaging and educational experience for the viewer.
+  * **Instruct BLIP (7B) Response:** The relationship between the magnifying glass and the antique map is that the magnifying glass is placed on top of the map, allowing the viewer to examine the details of the map more closely.<span style="color:green"> By using the magnifying glass, the viewer can gain a better understanding of the map's features, such as geographical locations, landmarks, and other details that might be difficult to see with the naked eye.</span> The magnifying glass serves as a tool to enhance the viewing experience of the antique map, making it more informative and engaging for the viewer.
+  * **LLaVA-1.5 (7B) Response:** The magnifying glass is placed over the antique map, which is a vintage, hand-drawn map of the world. <span style="color:green">The magnifying glass is used to examine the details of the map more closely, providing a better understanding of the geographical features and information displayed on the map. The magnifying glass enhances the visual experience by allowing the viewer to see the intricate details and nuances of the antique map,</span> which might not be easily discernible without the aid of the magnifying glass. This combination of the magnifying glass and the antique map creates a visually engaging and educational experience for the viewer.
   
-  * **Llama Adapter Response:** The magnifying glass is used to enhance the view of the antique map, allowing the viewer to see more details and possibly identify specific locations or features on the map more easily. The magnifying glass can be helpful in studying the map's content, such as historical events, geographical features, or cultural aspects, as it can provide a closer and clearer view of the map's details.
+  * **Llama Adapter Response:** <span style="color:green">The magnifying glass is used to enhance the view of the antique map, allowing the viewer to see more details and possibly identify specific locations or features on the map more easily.</span> The magnifying glass can be helpful in studying the map's content, such as historical events, geographical features, or cultural aspects, as it can provide a closer and clearer view of the map's details.
+
+<div class="row mt-1">
+   <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/image_prompt/bed.png" class="img-fluid rounded" %}
+  </div> 
+</div>
+
+**<mark>Implicit Relationship Inference</mark>**<br>
+**Prompt for picture:  What is this picture about?**
+  * **Instruct BLIP (7B) Response:** The image depicts a woman lying in a hospital bed, with her head resting on the pillow. She appears to be experiencing some discomfort or pain, as she is covering her face with her hands. There are several bottles scattered around the room, likely containing medication or other medical supplies.  In addition to the woman and the hospital bed, there are two chairs present in the scene. One chair is placed near the bed, while the other is positioned closer to the left side of the room. A cup can be seen on one of the chairs, suggesting that it may have been used by the woman or someone else during their stay in the hospital.<span style="color:red"> Overall, the scene conveys a sense of concern and care for the woman's well-being.</span>
+  * **LLaVA-1.5 (7B) Response:** The image depicts a woman kneeling beside a hospital bed, holding her hands to her face. She appears to be in a hospital room, possibly in a state of distress or concern. The bed is positioned in the center of the room, and there are several bottles scattered around the area. \n\nIn addition to the bottles, there are two cups placed near the bed, and a vase can be seen on the left side of the room. <span style="color:green">The woman's posture and the presence of the hospital bed suggest that she might be a patient or a caregiver in the hospital.</span>
+  * **Llama Adapter Response:** The image depicts a woman sitting on a bed in a hospital room, looking down and covering her face with her hands. She appears to be in a state of distress or sadness. The room is well-lit, with a window visible in the background. There are several chairs in the room, with one chair placed near the woman and another chair situated closer to the window. A clock is also visible on the wall, providing a sense of time passing. <span style="color:red">(No general conclusion is reached by the model)</span>
+
+
+#### Conclusion
+The following table summarizes the performance of the models on different prompts (ideas/concepts). If the model correctly covers what the question asks then, we evaluate it as a success and if the model starts hallucinating or even gets stuck or gives an irrelevant answer then, we mark that as a failure.
+
+| Model     | Emotion / Atmosphere Inference | Create a Backstory | Predict Future | Explain Object-Object Relationship | Explain Human-Object Relationship | Explain Human-Human Relationship | Confusing Image |Implicit Relationship Inference |
+|-----------|----------|----------|----------|----------|----------|----------|----------|
+| InstructBLIP   | ❌                |   ❌ (Lacks creativity)     |  ✔       |   ✔      |    ❌     | ✔        | ❌        |  ❌  |
+| LLaVA-1.5   | ✔                |   ✔      |  ✔       |   ✔      |     ✔     | ✔        | ✔        |   ✔ |
+| LLAMA-Adapter   | ✔        |   ✔      |     ✔    |     ✔    |  ❌       | ✔        | ❌        |     ❌  |
+
 
 
 
