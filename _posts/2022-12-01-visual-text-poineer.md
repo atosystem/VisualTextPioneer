@@ -39,7 +39,9 @@ toc:
     - name: Parameter-Efficient Tuning
   - name: Method Comparisons
     subsections:
-    - name: Qualitative Analysis - Different types of Image and Prompts 
+    - name: Quantitative Analysis-ScienceQA
+    - name: Qualitative Analysis-Different types of Image and Prompts 
+    - name: Qualitative Analysis-Robustness
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -304,17 +306,23 @@ Question Answering Accuracy (%) on ScienceQA’s [41] test set. "T" denotes the 
 </div>
 
 
+## Method Comparisons
 
-#### Quantitative Analysis - ScienceQA 
+### Quantitative Analysis-ScienceQA 
 
-| Method |  Val Acc (%)  |
-| -------- | -------- |
-| BLIP-2(Vicuna-7B)<d-cite key="li2023blip2"></d-cite> | 77.3 |
-| InstructBLIP(Vicuna-7B)<d-cite key="instructblip"></d-cite>     |  79.5   |
-| LLaVA<d-cite key="liu2023llava"></d-cite>     |  90.9   |
-| LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>     |  85.2   |
+| Method |  Val Acc (%)  | Trainable Params(M) |
+| -------- | -------- | -------- |
+| BLIP-2(Vicuna-7B)<d-cite key="li2023blip2"></d-cite> | 77.3 | -------- |
+| InstructBLIP(Vicuna-7B)<d-cite key="instructblip"></d-cite>     |  79.5   | -------- |
+| LLaVA<d-cite key="liu2023llava"></d-cite>     |  90.9   | -------- |
+| LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>     |  85.2   |  1.2M |
 
-#### Qualitative Analysis - Different types of Image and Prompts
+LLaVA has the best performance among all the models.
+We think that it is quite expected because in the stage 2 of LLaVA, they fintune LLM + the learnable transformation layer.
+
+
+
+### Qualitative Analysis-Different types of Image and Prompts
 In this section, we perform qualitative analysis by utilizing various images and prompts to explore distinct forms of visual reasoning across three methods. Within this analysis, we categorize our visual reasoning into six distinct types, as outlined below:
 
 1. Emotion / Atmosphere Inference:
@@ -443,7 +451,7 @@ Hospital Scenario
 
 
 
-#### Qualitative Analysis - Robustness
+### Qualitative Analysis-Robustness
 To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
 
 <div class="row mt-1">
