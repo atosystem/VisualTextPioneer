@@ -31,7 +31,6 @@ bibliography: 2022-12-01-visual-text-poineer.bib
 #   - make sure that TOC names match the actual section names
 #     for hyperlinks within the post to work correctly.
 toc:
-  - name: Readme
   - name: Introduction
   - name: Methods
     subsections:
@@ -62,7 +61,7 @@ _styles: >
   }
 ---
 
-## Readme
+<!-- ## Readme
 
 > I will delete this section when submmiting for our project.
 
@@ -75,16 +74,29 @@ The files are organized as the following: ([SUBMISSION NAME]=`visual-text-pionee
 
 * Add any interactive HTML figures will be added to assets/html/2022-12-01-visual-text-poineer/.
 
-* Put your citations into a bibtex file in assets/bibliography/2022-12-01-visual-text-poineer.bib.
+* Put your citations into a bibtex file in assets/bibliography/2022-12-01-visual-text-poineer.bib. -->
 
 ## Introduction
 
-Recent papers have shown the success of adapting LLMs to vision-language tasks with a small amount of fine-tuning required.
+<!-- Recent papers have shown the success of adapting LLMs to vision-language tasks with a small amount of fine-tuning required.
 There are different methods to combine visual and text input. 
 In this blog post, we will focus on methods that leverage a learnable interface to establish connections between images and text. 
 These methods fall into three categories: query-based, projection-based, and parameter-efficient tuning approaches.
 We will first introduce a representative work for each method and conduct some analysis, visualization, or interpretation on each of them(refer to $$*$$ below). 
-Lastly, we will compare them on two benchmarks: ScienceQA<d-cite key="lu2022ScienceQA"></d-cite> and MME<d-cite key="fu2023mme"></d-cite> and make some conclusions about our findings.
+Lastly, we will compare them on two benchmarks: ScienceQA<d-cite key="lu2022ScienceQA"></d-cite> and MME<d-cite key="fu2023mme"></d-cite> and make some conclusions about our findings. -->
+
+Recent papers have shown the success of adapting LLMs to vision-language tasks with a small amount of fine-tuning required.
+Various methods are proposed for bridging visual and text modalities.
+Nonetheless, the comparison and analysis among them are rarely studied.
+To this end, we plan to write a blog post to give a kind introduction and summary of recent approaches for vision-language adaption for LLM.
+Although there are lots of related works in recent years, they basically fall into three categories: *query-based*, *projection-based*, and *parameter-efficient tuning* approaches (following definitions in<d-cite key="yin2023survey"></d-cite>).
+For each of the categories, we select one representative work for our blog post.
+
+
+Our blog post consists of two main parts.
+In the first part, we will give a detailed introduction to each representative work individually.
+We will also demonstrate some additional analysis done by ourselves and some conclusions.
+For the second part, we will try to make comparisons between the three methods quantitatively and qualitatively.
 
 ## Methods
 
@@ -179,62 +191,64 @@ In this section, we chose the works  LLaVA <d-cite key="liu2023llava"></d-cite> 
 
 ### Parameter-Efficient Tuning
 
-In this section we choose LLaMA Adapter<d-cite key="zhang2023llamaadapter"></d-cite> as the representative. 
-To incoporate visual information into pretrained LLMs, we can also use adatpers. 
-Adapters are common techiniques for fintuning large model for downstream tasks. 
-The main concept of adapters is that rather than tunning the entire model, we inject learnable light weight parameters in different layer of the large model. 
-By doing so, we can steer the pretrained model to a new dowstream task. 
-The advantage is that, by injecting adapters into deep layers of LLM, we can change the representation in different depth of the model without the need to update deep layers.
+In this section, we choose the LLaMA Adapter<d-cite key="zhang2023llamaadapter"></d-cite> as the representative. 
+To incorporate visual information into pretrained LLMs, we can also use adapters. 
+Adapters are common techniques for finetuning large models for downstream tasks. 
+The main concept of adapters is that rather than tuning the entire model, we inject learnable lightweight parameters in different layers of the large model. 
+By doing so, we can steer the pretrained model to a new downstream task. 
+The advantage is that, by injecting adapters into deep layers of LLM, we can change the representation in different depths of the model without the need to update deep layers.
+The visual information is integrated into the LLaMA model by adding different scales of CLIP image encoder<d-cite key="clip2021"></d-cite>  outputs to the learnable adapter prompts.
 
-In LLaMA Adapter, they propose a new training method **Zero-init Gated Attention**. 
-When fintuning with adapter in early training stage, it is often unstable. 
-The reason is that the pretrained model has not yet learned how to utilize the newly inject adapter modules. 
-To this end, in LLaMA adapter, the author intorduce a gate factor $$\alpha$$ on the adapter part of attention score before performing multiplying the values in attention layer.
+
+In the LLaMA Adapter, they propose a new training method **Zero-init Gated Attention**. 
+When fintuning with adapters in the early training stage, it is often unstable. 
+The reason is that the pretrained model has not yet learned how to utilize the newly injected adapter modules. 
+To this end, in the LLaMA adapter, the authors introduce a gating factor $$\alpha$$ on the adapter part of the attention score before multiplying the values in the attention layer.
 Their ablation studies further substantiate the advantage of this proposed method.
 
-The contributions of LLaMA can be summarized as follow:
+The contributions of LLaMA can be summarized as the following:
 * 1.2M tunable params required to achieve comparable abilities of 7B Alpaca(Fully fintuned on LLaMA 7B)
 * Train less than 1 hour on 8 A100 GPU 3x faster than Alpaca
 * More flexible to switch adapters than train the whole model 
 * Enable to perform multimodal tasks: ScienceQA and COCO Captions
-* Zero-initialized Attention can mitigate early stage unstability and can be generalized to other traditional vision and language models
+* Zero-initialized Attention can mitigate early-stage unstability and can be generalized to other traditional vision and language models
 
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_overview.png" class="img-fluid" %}
 <div class="caption">
-The overview of LLaMA-Adapter Architecture
+The overview of LLaMA-Adapter Architecture.
 </div>
 
 #### Zero-Init Attention
 
-To mitigate early stage disturbance of adatption prompt. The author introduce a learnable gate factor on the attention score of adaption prompts’ positions.
+To mitigate early-stage disturbance of adapter prompt. The author introduces a learnable gate factor on the attention score of adaption prompts’ positions.
 Specifically, let’s take a closer look at the attention layer of LLaMA.
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_attention.png" class="img-fluid" %}
 
-Suppose we have $$K$$ adaption prompts prepended in the beginning of the original sequence (length=$$M+1$$), $$C$$ indicates the hidden dimension of the model. 
-Now, that's consider the last timestep for attention calculation. 
+Suppose we have $$K$$ adaption prompts prepended at the beginning of the original sequence (length=$$M+1$$), $$C$$ indicates the hidden dimension of the model. 
+Now, let's consider the last timestep for attention calculation. 
 $$\mathbf{Q}_t$$ is the query vector of the last timestep,
 $$\mathbf{K}_l$$ are the key vectors of the entire input sequence ($$K+M+1$$),
 $$\mathbf{V}_l$$ are the value vectors of the entire input sequence ($$K+M+1$$)
 
-To calculalte the attention score for the last timestep query to all keys $$\mathbf{S}_l$$, we simply do a dot product $$\mathbf{Q}_l$$ and $$\mathbf{K}_l$$ and normalize it by $$\sqrt{C}$$.
+To calculate the attention score for the last timestep query to all keys $$\mathbf{S}_l$$, we simply do a dot product $$\mathbf{Q}_l$$ and $$\mathbf{K}_l$$ and normalize it by $$\sqrt{C}$$.
 
-Notice that the upper part(first $$K$$ rows) of the attention scores $$\mathbf{S}_l$$ is affected by adaption prompt ($$[\mathbf{P}_1...\mathbf{P}_k]$$) while the rest of them aren't.
-To let the model to gradually utilize the adaption prompt, the author multiply the upper part with a learnable gating factor $$\mathbf{g}_l$$. 
-The softmax function is applied separately for the upper and lower parts of $$\mathbf{S}_l$$ rather than on the whole vector. The reason is that we don't want the values on the lower part(original attention) be affected by the values on the upper part(adapter prompts).
+Notice that the upper part(first $$K$$ rows) of the attention scores $$\mathbf{S}_l$$ is affected by adapter prompt ($$[\mathbf{P}_1...\mathbf{P}_k]$$) while the rest of them aren't.
+To let the model gradually utilize the adaption prompt, the author multiplies the upper part with a learnable gating factor $$\mathbf{g}_l$$. 
+The softmax function is applied separately for the upper and lower parts of $$\mathbf{S}_l$$ rather than on the whole vector. The reason is that we don't want the values on the lower part(original attention) to be affected by the values on the upper part(adapter prompts).
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_attention1.png" class="img-fluid" %}
 
 <div class="caption">
-In their implemention code, the gating factor is different for each layer and each attention head.
+In their implementation code, the gating factor is different for each layer and each attention head.
 </div>
 
 
-Finally, the modified attention scores are then used to perform weighted sum over the entire values vector sequence to get the final hidden state for the last timestep.
-To sum up, if the gating factor is 0, it is a oridinary attention calculation. The author initialized the gating factor as 0, which is also the reason why its dubbed as **zero-init** attention.
+Finally, the modified attention scores are then used to perform a weighted sum over the entire values vector sequence to get the final hidden state for the last timestep.
+To sum up, if the gating factor is 0, it is an ordinary attention calculation. The author initialized the gating factor as 0, which is also the reason why it's dubbed as **zero-init** attention.
 
-The author further conduct some ablation experiments to justify the effectiveness of **zero-init** attention.
+The author further conducted some ablation experiments to justify the effectiveness of **zero-init** attention.
 
 1. The final performance on ScienceQA
 
@@ -267,20 +281,29 @@ The author further conduct some ablation experiments to justify the effectivenes
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_loss_curve.png" class="img-fluid" %}
 
 
-In addition to the analysis provided in the manuscript, we are curious how the learning factor grows thoughout the training process.
-Hence, we train the LLaMA-Adapter for 5 epochs on Alplaca 52K Instruction dataset and we visulize the gating factor for each layer and each head. Notice that we only draw the absolute value of gating factor since only the magnitude matters.
-We create a interatve visulization in the following.
+In addition to the analysis provided in the manuscript, we are curious how the learning factor grows throughout the training process.
+Hence, we train the LLaMA-Adapter for 5 epochs on the Alplaca 52K Instruction dataset and we visualize the gating factor for each layer and each head. Notice that we only draw the absolute value of the gating factor since only the magnitude matters.
+We create an interactive visulization in the following.
     
 
 <div class="l-page">
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llama_adapter_alpha_animation.html' | relative_url }}" frameborder='0' scrolling='no' height="600px" width="100%"></iframe>
 </div>
 
-As expected, the gating factor gradually grows thorughout the training process. We also observed a trend that the gating factors in upper layers tend to have a higher value. This may be resonable because the representations in upper layers are more task specific. So the role of adapters are more crucial to them.
+As expected, the gating factor gradually grows throughout the training process. We also observed a trend that the gating factors in the upper layers tend to have a higher value. This may be reasonable because the representations in the upper layers are more task-specific. So the role of adapters is more crucial to them.
 
-LLaMA-Adapter incoporate visual modality by adding image embeddings(from CLIP<d-cite key="clip2021"></d-cite>) on to each learnble adapter prompts. 
 
-($$*$$) For this type of modality bridging, we want to investigate what the adaption prompt learned and how the model attends to the adaption prompt when inference.
+The results for multimodal QA is in the following table. 
+LLaMA-Adapter out perform previous LLM on ScienceQA.
+
+
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_scienceQA.png" class="img-fluid" %}
+
+<div class="caption">
+Question Answering Accuracy (%) on ScienceQA’s [41] test set. "T" denotes the single-modal model with text-only input.
+</div>
+
+
 
 #### Quantitative Analysis - ScienceQA 
 
