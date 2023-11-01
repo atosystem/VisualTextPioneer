@@ -312,8 +312,8 @@ Question Answering Accuracy (%) on ScienceQA’s [41] test set. "T" denotes the 
 
 | Method |  Val Acc (%)  | Trainable Params(M) |
 | -------- | -------- | -------- |
-| BLIP-2(Vicuna-7B)<d-cite key="li2023blip2"></d-cite> | 77.3 | -------- |
-| InstructBLIP(Vicuna-7B)<d-cite key="instructblip"></d-cite>     |  79.5   | -------- |
+| BLIP-2(Vicuna-7B)<d-cite key="li2023blip2"></d-cite> | 77.3 | 188M |
+| InstructBLIP(Vicuna-7B)<d-cite key="instructblip"></d-cite>     |  79.5   | 188M |
 | LLaVA<d-cite key="liu2023llava"></d-cite>     |  90.9   | -------- |
 | LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>     |  85.2   |  1.2M |
 
