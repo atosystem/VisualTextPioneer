@@ -362,11 +362,8 @@ In this section, we perform qualitative analysis by utilizing various images and
 
 <div class="row mt-1">
     <div class="col-sm mt-1 mt-md-0">
-        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/image_prompt/bed.png" class="img-fluid rounded" %}
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/image_prompt/bed.jpg" class="img-fluid rounded" %}
     </div>
-    <div class="caption">
-Hospital Scenario
-</div>
 </div>
 
 
