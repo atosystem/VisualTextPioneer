@@ -445,3 +445,40 @@ Hospital Scenario
 
 #### Qualitative Analysis - Robustness
 To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
+
+<div class="row mt-1">
+   <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/unrelated/rain.jpeg" class="img-fluid rounded" %}
+  </div> 
+</div>
+
+**Prompt for picture:  Where is the man with the red hat?**
+  * **Instruct BLIP (7B) Response:** The man with the red hat is standing under an umbrella in the rain.
+  * **LLaVA-1.5 (7B) Response:** 
+  
+  * **Llama Adapter Response:** 
+
+**Prompt for picture:  Where is the man with the red hat? Note that the image might be unrelated to this question.**
+  * **Instruct BLIP (7B) Response:** behind umbrella
+  * **LLaVA-1.5 (7B) Response:** 
+  
+  * **Llama Adapter Response:** 
+
+
+<div class="row mt-1">
+   <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/unrelated/desert.jpeg" class="img-fluid rounded" %}
+  </div> 
+</div>
+
+**Prompt for picture:  Why there are so many people on the ocean?**
+  * **Instruct BLIP (7B) Response:** There are no people on the ocean in the image.
+  * **LLaVA-1.5 (7B) Response:** 
+  
+  * **Llama Adapter Response:** 
+
+**Prompt for picture:  Why there are so many people on the ocean?**
+  * **Instruct BLIP (7B) Response:** no
+  * **LLaVA-1.5 (7B) Response:** 
+  
+  * **Llama Adapter Response:** 
