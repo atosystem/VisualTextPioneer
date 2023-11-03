@@ -189,11 +189,67 @@ In this section, we chose the works  LLaVA <d-cite key="liu2023llava"></d-cite> 
 * The paper highlights that the amount of multimodal data (text, image) pairs have increased over time. However, the amount of instruction following multimodal data is still limited because the process is time-consuming and not well structured for human crowd source data collection. Therefore, the paper utilized language only GPT-4 model to generate three different type of data (conversation styled, detailed description, compelx reasoning) by only prompting the model with image description and the bounding box of the object present in the image.
 * Secondly, the authors presented an end-to-end model using off-the-shelf image encoder (Clip Visual encoder ViT-L/14) and LLM (Llama) by mapping the representations of the vision model to the same higher dimensional textual embedding space using a linear projection layer.
 
-## LLaVA Model Architecture
+### GPT-4 Assisted Visual Instruction Data Generation
+The authors utilized language GPT-4 model to generate visual instruction tuned data for (image, text) pairs by prompting the GPT-4 model with features of image such as description of scenario and objects in the image and bounding box data of the objects in the image. Then, the model is seeded with a couple of manually curated data. Three type of instruction-following data is collected:
+
+* _Conversation_
+  > A conversation between assistant and a person asking questions about a given photo. The answers are in a tone as if the assistant is seeing the image and answering the questions. Questions asked include object types, counting the objects, object actions, relative positions between objects.
+* _Detailed Description_
+  > A list of questions is curated that prompt GPT-4 to answer in a more detail way about the image. The questions include : 
+  > * Describe the following image in detail
+  > * Provide a detialed description of the given image
+  > * Analyze the image in a comprehensive and detailed manner
+* _Complex Reasoning_
+ > This type of questions require answers that require a step-by-step reasoning process by following rigorous logic.
+
+### LLaVA Model Architecture
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_model_architecture.png" class="img-fluid" %}
 
-As LLaVA model relies on off-the-shelf pretrained vision and language models and these models maps their input to a separate high dimensional space. However, to effectively leverage their capabilites (i.e., jointly use the information captured by vision and language embeddings), the embeddings have to be mapped closer in the same higher dimensional space. 
+As LLaVA model relies on off-the-shelf pretrained vision and language models and these models maps their input to a separate high dimensional space. However, to effectively leverage their capabilites (i.e., jointly use the information captured by vision and language embeddings), the embeddings have to be mapped closer in the same higher dimensional space. For an input image  $$X_v$$, a pre-trained CLIP visual encoder ViT/L-14 is used to extract the visual features $$Z_v = g(X_v)$$. The model uses grid features before and after the last Transformer layer for experiments. To convert, the extracted visual features and to provide conditioning to the text, the features are mapped to the space of text token embeddings via a single linear layer. Specifically, $$ Z_v $$ is converted to $$ H_v $$ via the learnable matrix $$ W $$ i.e., $$ H_v = W * Z_v$$. 
 
+### Training of LLaVA Model
+
+The data to instruct tune the model is generated as: For each image $$ X_v $$, multi-turn conversation data is generated as a sequence $$ ( X_q^1, X_a^1 , \dots, X_q^T, X_a^T )$$ where $$ T $$ represents the total number of turns. At iteration $$t$$, the model is given $$X_{instruct}^t$$ which is defined as : <br>
+
+$$  
+X_{instruct}^t = \begin{cases} 
+          \text{Random choice } [X_v, X_q^1] \text{ or } [X_q^1, X_v] & t=1 \\
+          X_q^t & t > 1 \\
+       \end{cases}
+  $$  
+  <br>
+Instruction tuning is performed on LLM on the prediction tokens via the original auto-regressive training objective. Specifically, model is fine tuned for the loss signal that is generated on predicted **answer tokens**. The model training is done in two steps:
+
+* **Feature alignment Phase**: In order to instruction tune the model, the first thing is to be able to learn the mapping between image encoder features to text embeddings. This is done by using filtered data from CC3M dataset to get $595$ K image-text pairs. These pairs can be converted to a single turn instruction-following data by associating a _**conversation**_ style question. Both the visual encoder and LLM weights are frozen, and the likelihood of answer is maximized given the image and instruction (question) by training the linear layer parameter i.e., $\theta = W$. **This step essentially then aligns the image features with pre-trained LLM word embeddings.**
+* **Fine-tuning End-to-End**: This step only keeps the weights of visual encoder frozen, and continue to update both the projection layer weights and the pre-trained LLM weights. Two specific use case scenarios are considered:
+  * _Multimodal Chatbot_: $158$ K unique language-image conversation styled collected multi-turn data is used for training. Uniform sampling is done from this dataset.
+  * _Science QA_: Science QA dataset is used to train the model for generating the reasoning process in natural language and then selecting the answer from the multiple choices.
+
+### Experiments
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_base_exp.png" class="img-fluid" %}
+The experimental analysis showed that LLaVA achieved SOTA performance on mean accuracy on ScienceQA compared to other methods such as Chain-Of-Thought (COT) and LLaMA-Adapter.
+
+### LLaVA-1.5 <d-cite key="liu2023improved"></d-cite> 
+
+#### Contributions of LLaVA-1.5
+
+The base architecture of LLaVA is kept intact but the following modifications are made:
+* CLIP-ViT-L-336px with an MLP projector is used instead of previously used visual encoder and a single linear projection layer.
+* Academic-task-oriented VQA data with prompt engineering 
+  
+The authors claim that LLaVA model was falling short on academic benchmakrs that typically require short-form answers. They attribute this to the fact that LLaVA has not bben pretrained on large-scale data as other approaches do. The following image studies the scaling effect of data, model and image resolution on a selection of three datasets given in the following table.
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_improved_scaling.png" class="img-fluid" %}
+
+Moreover, the authors proposed that to control the length of prompted answer of LLaVA model, they explicitly state that information in the prompt during its fine-training stage which can help the model to learn to control the length of output response. Apart from this, the model is fine-tuned on academic-task-oriented VQA datasets such as open-knowledge VQA, OCR VQA, and region level VQA. Moreover, a two linear layer MLP architecture is used for projecting visual features to text token embedding space. Furthermore, image size is scaled up to $336$ px and LLM model size is scaled to $13$ B.
+
+### Experiments
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_improved_results.png" class="img-fluid" %}
+Based on the previous additions to the model, the performance on a total of $12$ benchmarks of academic VQA benchmarks specifically proposed for instruction following LMMs showed that LLaVA-1.5 achieved SOTA performance across $11$ out of $12$ benchmarks.
+
+### Limitations
+* LLaVA-1.5 is not capable of processing multiple images due to lack of such instruction-following data and limit of context lengths.
+* LLaVA-1.5 problem-solving capabilities can still be limited in certain domains
+* LLaVA-1.5 can suffer from hallucinations and occasionally disseminating misinformation, so, it should be used with caution in critical applications like **medical**
 
 ### Parameter-Efficient Tuning
 
