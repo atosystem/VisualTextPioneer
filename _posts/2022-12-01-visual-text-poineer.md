@@ -37,14 +37,14 @@ toc:
     - name: Query-based
     - name: Projection-based
     - name: Parameter-Efficient Tuning
-  - name: Method Comparisons
-    subsections:
-    - name: Quantitative Analysis-ScienceQA
-    - name: Qualitative Analysis-Different types of Image and Prompts 
-    - name: Qualitative Analysis-Robustness
-    - name: Qualitative Analysis-Embedding Visualizations
-    - name: Quantitative Analysis-Image-to-Text Retrieval
-  - name: Unified Framework
+  # - name: Method Comparisons
+  #   subsections:
+  #   - name: Quantitative Analysis-ScienceQA
+  #   - name: Qualitative Analysis-Different types of Image and Prompts 
+  #   - name: Qualitative Analysis-Robustness
+  - name: Qualitative Analysis-Different types of Image and Prompts 
+  - name: Qualitative Analysis-Robustness
+  - name: Quantitative Analysis-Unified Framework
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -81,6 +81,10 @@ The files are organized as the following: ([SUBMISSION NAME]=`visual-text-pionee
 
 * Put your citations into a bibtex file in assets/bibliography/2022-12-01-visual-text-poineer.bib. -->
 
+## TL;DR
+
+We did a blog post to introduce 3 existing type of integrating vision modality into LLM. Additionally, we also conduct both qualitative and quantitative analysis between three methods. 
+
 ## Introduction
 
 <!-- Recent papers have shown the success of adapting LLMs to vision-language tasks with a small amount of fine-tuning required.
@@ -97,14 +101,29 @@ To this end, we plan to write a blog post to give a kind introduction and summar
 Although there are lots of related works in recent years, they basically fall into three categories: *query-based*, *projection-based*, and *parameter-efficient tuning* approaches (following definitions in<d-cite key="yin2023survey"></d-cite>).
 For each of the categories, we select one representative work for our blog post.
 
-
-Our blog post consists of two main parts.
-In the first part, we will give a detailed introduction to each representative work individually.
-We will also demonstrate some additional analysis done by ourselves and some conclusions.
-For the second part, we will try to make comparisons between the three methods quantitatively and qualitatively.
+In this blog post, we first give detailed introductions to each representative work individually.
+Then we show some qualitative and quantitative analysis done by ourselves and provied some conclusion from those results.
 
 ## Methods
 
+| Categories | Query-based  | Projection-based | Parameter-Efficient Tuning |
+| Selected model | InstructBLIP<d-cite key="instructblip"></d-cite>  | LLaVA<d-cite key="liu2023llava"></d-cite> | LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>
+| -------- | -------- | -------- | -------- |
+| Is the extracted image features conditioned on text? | ✔    | ❌ | ❌ |
+| Where are the two modalities concatenated?  | At the input of LLM    | At the input of LLM | At each adapters in multiple layers of LLM |
+| Is the model pretrained on image-caption dataset?  |  ✔  | ✔ | ❌ |
+| Trainable Params |  188M | 7B | 1.2M |
+| ScienceQA Results (Acc %) | 79.5 | 90.9 | 85.2 |
+
+
+
+<div class="caption">
+Comparison for the three selected models. (ScienceQA results are reported from each individal paper.)
+</div>
+
+The upper two rows(Is the extracted image features conditioned on text?,Where are the two modalities concatenated?) of the table are the main concept to distinguish between the three categories.
+
+In the following subsection, we will introduce the details about each selected model.
 
 ### Query-based
 <!-- In BLIP-2<d-cite key="li2023blip2"></d-cite> , they propose a generic and compute-efficient training strategy that bootstraps from off-the-shelf frozen pre-trained vision and language models. To bridge the modality gap, they introduce a lightweight Querying Transformer(Q-Former) that employs a set of learnable queries to extract the most relevant visual features for the LLM to output the desired text. 
@@ -192,7 +211,7 @@ In this section, we chose the works  LLaVA <d-cite key="liu2023llava"></d-cite> 
 * The paper highlights that the amount of multimodal data (text, image) pairs have increased over time. However, the amount of instruction following multimodal data is still limited because the process is time-consuming and not well structured for human crowd source data collection. Therefore, the paper utilized language only GPT-4 model to generate three different type of data (conversation styled, detailed description, compelx reasoning) by only prompting the model with image description and the bounding box of the object present in the image.
 * Secondly, the authors presented an end-to-end model using off-the-shelf image encoder (Clip Visual encoder ViT-L/14) and LLM (Llama) by mapping the representations of the vision model to the same higher dimensional textual embedding space using a linear projection layer.
 
-### GPT-4 Assisted Visual Instruction Data Generation
+#### GPT-4 Assisted Visual Instruction Data Generation
 The authors utilized language GPT-4 model to generate visual instruction tuned data for (image, text) pairs by prompting the GPT-4 model with features of image such as description of scenario and objects in the image and bounding box data of the objects in the image. Then, the model is seeded with a couple of manually curated data. Three type of instruction-following data is collected:
 
 * _Conversation_
@@ -205,12 +224,12 @@ The authors utilized language GPT-4 model to generate visual instruction tuned d
 * _Complex Reasoning_
  > This type of questions require answers that require a step-by-step reasoning process by following rigorous logic.
 
-### LLaVA Model Architecture
+#### LLaVA Model Architecture
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_model_architecture.png" class="img-fluid" %}
 
 As LLaVA model relies on off-the-shelf pretrained vision and language models and these models maps their input to a separate high dimensional space. However, to effectively leverage their capabilites (i.e., jointly use the information captured by vision and language embeddings), the embeddings have to be mapped closer in the same higher dimensional space. For an input image  $$X_v$$, a pre-trained CLIP visual encoder ViT/L-14 is used to extract the visual features $$Z_v = g(X_v)$$. The model uses grid features before and after the last Transformer layer for experiments. To convert, the extracted visual features and to provide conditioning to the text, the features are mapped to the space of text token embeddings via a single linear layer. Specifically, $$ Z_v $$ is converted to $$ H_v $$ via the learnable matrix $$ W $$ i.e., $$ H_v = W * Z_v$$. 
 
-### Training of LLaVA Model
+#### Training of LLaVA Model
 
 The data to instruct tune the model is generated as: For each image $$ X_v $$, multi-turn conversation data is generated as a sequence $$ ( X_q^1, X_a^1 , \dots, X_q^T, X_a^T )$$ where $$ T $$ represents the total number of turns. At iteration $$t$$, the model is given $$X_{instruct}^t$$ which is defined as : <br>
 
@@ -228,13 +247,13 @@ Instruction tuning is performed on LLM on the prediction tokens via the original
   * _Multimodal Chatbot_: $158$ K unique language-image conversation styled collected multi-turn data is used for training. Uniform sampling is done from this dataset.
   * _Science QA_: Science QA dataset is used to train the model for generating the reasoning process in natural language and then selecting the answer from the multiple choices.
 
-### Experiments
+#### Experiments
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_base_exp.png" class="img-fluid" %}
 The experimental analysis showed that LLaVA achieved SOTA performance on mean accuracy on ScienceQA compared to other methods such as Chain-Of-Thought (COT) and LLaMA-Adapter.
 
-### LLaVA-1.5 <d-cite key="liu2023improved"></d-cite> 
+#### LLaVA-1.5 <d-cite key="liu2023improved"></d-cite> 
 
-#### Contributions of LLaVA-1.5
+**Contributions of LLaVA-1.5**
 
 The base architecture of LLaVA is kept intact but the following modifications are made:
 * CLIP-ViT-L-336px with an MLP projector is used instead of previously used visual encoder and a single linear projection layer.
@@ -245,11 +264,11 @@ The authors claim that LLaVA model was falling short on academic benchmakrs that
 
 Moreover, the authors proposed that to control the length of prompted answer of LLaVA model, they explicitly state that information in the prompt during its fine-training stage which can help the model to learn to control the length of output response. Apart from this, the model is fine-tuned on academic-task-oriented VQA datasets such as open-knowledge VQA, OCR VQA, and region level VQA. Moreover, a two linear layer MLP architecture is used for projecting visual features to text token embedding space. Furthermore, image size is scaled up to $336$ px and LLM model size is scaled to $13$ B.
 
-### Experiments
+#### Experiments
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_improved_results.png" class="img-fluid" %}
 Based on the previous additions to the model, the performance on a total of $12$ benchmarks of academic VQA benchmarks specifically proposed for instruction following LMMs showed that LLaVA-1.5 achieved SOTA performance across $11$ out of $12$ benchmarks.
 
-### Limitations
+#### Limitations
 * LLaVA-1.5 is not capable of processing multiple images due to lack of such instruction-following data and limit of context lengths.
 * LLaVA-1.5 problem-solving capabilities can still be limited in certain domains
 * LLaVA-1.5 can suffer from hallucinations and occasionally disseminating misinformation, so, it should be used with caution in critical applications like **medical**
@@ -281,7 +300,7 @@ The contributions of LLaMA can be summarized as the following:
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_overview.png" class="img-fluid" %}
 <div class="caption">
-The overview of LLaMA-Adapter Architecture.
+The overview of LLaMA-Adapter Architecture. (Figure from <d-cite key="zhang2023llamaadapter"></d-cite>)
 </div>
 
 #### Zero-Init Attention
@@ -324,6 +343,11 @@ The author further conducted some ablation experiments to justify the effectiven
     | Rand-Init Attention     | 40.77     | 
     | Zero-Init Attention     | 83.85     | 
     | Gain     | +43.08     |
+
+    <div class="caption">
+    Table from <d-cite key="zhang2023llamaadapter"></d-cite>
+    </div>
+
   
 
 2. Robustness to overfit
@@ -336,6 +360,10 @@ The author further conducted some ablation experiments to justify the effectiven
     | 30     | 0.004     | 0.241    | 83.85    |
     | 60     | 0.001     | 0.282    | **83.94**    |
 
+     <div class="caption">
+    Table from <d-cite key="zhang2023llamaadapter"></d-cite>
+    </div>
+
 
 3. Convergence
 
@@ -344,6 +372,9 @@ The author further conducted some ablation experiments to justify the effectiven
 
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_loss_curve.png" class="img-fluid" %}
+ <div class="caption">
+    Training curves w/ and w/o zero-init attention. (Figure from <d-cite key="zhang2023llamaadapter"></d-cite>)
+</div>
 
 
 In addition to the analysis provided in the manuscript, we are curious how the learning factor grows throughout the training process.
@@ -365,13 +396,13 @@ LLaMA-Adapter out perform previous LLM on ScienceQA.
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llama_adapter_scienceQA.png" class="img-fluid" %}
 
 <div class="caption">
-Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the single-modal model with text-only input.
+Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the single-modal model with text-only input. (Table from <d-cite key="zhang2023llamaadapter"></d-cite>)
 </div>
 
 
-## Method Comparisons
+<!-- ## Method Comparisons -->
 
-### Quantitative Analysis-ScienceQA 
+<!-- ### Quantitative Analysis-ScienceQA 
 
 | Method |  Val Acc (%)  | Trainable Params(M) |
 | -------- | -------- | -------- |
@@ -383,9 +414,9 @@ Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the singl
 LLaVA has the best performance among all the models.
 We think that it is quite expected because in the stage 2 of LLaVA, they fintune LLM + the learnable transformation layer.
 
+ -->
 
-
-### Qualitative Analysis-Different types of Image and Prompts
+## Qualitative Analysis-Different types of Image and Prompts
 In this section, we perform qualitative analysis by utilizing various images and prompts to explore distinct forms of visual reasoning across three methods. Within this analysis, we categorize our visual reasoning into six distinct types, as outlined below:
 
 1. Emotion / Atmosphere Inference:
@@ -541,7 +572,7 @@ The following table summarizes the performance of the models on different prompt
 
 
 
-### Qualitative Analysis-Robustness
+## Qualitative Analysis-Robustness
 To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
 
 <div class="row mt-1">
@@ -626,7 +657,14 @@ In this section, we conducted a study to analyze if we can extract the correspon
 
 
 ## Unified Framework
+## Quantitative Analysis-Unified Framework
+
 In the comparison among the three methods, their individual use of diverse settings and datasets for training makes direct comparisons challenging. To address this, we introduced a unified framework that focuses on evaluating the impact of different architectural designs by incorporating two variable factors.
+
+{% include figure.html path="assets/img/2022-12-01-visual-text-poineer/unified_framework.png" class="img-fluid" %}
+<div class="caption">
+The model architecture of our unified framework.
+</div>
 
 As shown in the framework overview, our framework consists of an image encoder, a Q-Former to bridge the extract image features, and a LLM. We used CLIP-ViT for the image encoder and Vicuna-7B for the LLM. Vicuna is a decoder-only Transformer instruction-tuned from LLaMA. Both the image encoder and the LLM are frozen during the training. We used VQAv2 for training and validation.
 
@@ -641,7 +679,7 @@ The results are shown below. For the VQAv2 dataset, we've recorded the top-1 acc
 |             | W/ Adapter | W/O Adapter   |
 | W/ Conditional Text | 61.83       | 61.47         |
 | W/O Conditional Text | 58.59     | 60.55         |
-| LLaVA-1.5 (7B) | xx      | 78.5*          |
+| LLaVA-1.5 (7B) | --      | 78.5*          |
 
 From these observations, two conclusions emerge:
 
