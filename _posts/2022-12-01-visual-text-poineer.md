@@ -101,11 +101,8 @@ To this end, we plan to write a blog post to give a kind introduction and summar
 Although there are lots of related works in recent years, they basically fall into three categories: *query-based*, *projection-based*, and *parameter-efficient tuning* approaches (following definitions in<d-cite key="yin2023survey"></d-cite>).
 For each of the categories, we select one representative work for our blog post.
 
-
-Our blog post consists of two main parts.
-In the first part, we will give a detailed introduction to each representative work individually.
-We will also demonstrate some additional analysis done by ourselves and some conclusions.
-For the second part, we will try to make comparisons between the three methods quantitatively and qualitatively.
+In this blog post, we first give detailed introductions to each representative work individually.
+Then we show some qualitative and quantitative analysis done by ourselves and provied some conclusion from those results.
 
 ## Methods
 
@@ -121,8 +118,10 @@ For the second part, we will try to make comparisons between the three methods q
 
 
 <div class="caption">
-Comparison for the three selected models.
+Comparison for the three selected models. (ScienceQA results are reported from each individal paper.)
 </div>
+
+The upper two rows(Is the extracted image features conditioned on text?,Where are the two modalities concatenated?) of the table are the main concept to distinguish between the three categories.
 
 In the following subsection, we will introduce the details about each selected model.
 
