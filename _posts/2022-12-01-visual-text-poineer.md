@@ -37,12 +37,14 @@ toc:
     - name: Query-based
     - name: Projection-based
     - name: Parameter-Efficient Tuning
-  - name: Method Comparisons
-    subsections:
-    - name: Quantitative Analysis-ScienceQA
-    - name: Qualitative Analysis-Different types of Image and Prompts 
-    - name: Qualitative Analysis-Robustness
-  - name: Unified Framework
+  # - name: Method Comparisons
+  #   subsections:
+  #   - name: Quantitative Analysis-ScienceQA
+  #   - name: Qualitative Analysis-Different types of Image and Prompts 
+  #   - name: Qualitative Analysis-Robustness
+  - name: Qualitative Analysis-Different types of Image and Prompts 
+  - name: Qualitative Analysis-Robustness
+  - name: Quantitative Analysis-Unified Framework
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -399,9 +401,9 @@ Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the singl
 </div>
 
 
-## Method Comparisons
+<!-- ## Method Comparisons -->
 
-### Quantitative Analysis-ScienceQA 
+<!-- ### Quantitative Analysis-ScienceQA 
 
 | Method |  Val Acc (%)  | Trainable Params(M) |
 | -------- | -------- | -------- |
@@ -413,9 +415,9 @@ Question Answering Accuracy (%) on ScienceQA’s test set. "T" denotes the singl
 LLaVA has the best performance among all the models.
 We think that it is quite expected because in the stage 2 of LLaVA, they fintune LLM + the learnable transformation layer.
 
+ -->
 
-
-### Qualitative Analysis-Different types of Image and Prompts
+## Qualitative Analysis-Different types of Image and Prompts
 In this section, we perform qualitative analysis by utilizing various images and prompts to explore distinct forms of visual reasoning across three methods. Within this analysis, we categorize our visual reasoning into six distinct types, as outlined below:
 
 1. Emotion / Atmosphere Inference:
@@ -571,7 +573,7 @@ The following table summarizes the performance of the models on different prompt
 
 
 
-### Qualitative Analysis-Robustness
+## Qualitative Analysis-Robustness
 To test the robustness of a multi-modal model, we provide a prompt that is completely unrelated to the image. This will evaluate the model's ability to focus on the provided textual input, ignoring the irrelevant visual context. There are two cases, with or without the hint that the image is unrelated to the picture. 
 
 <div class="row mt-1">
@@ -612,7 +614,7 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
   * **Llama Adapter Response:** There could be several reasons for the presence of so many people on the ocean. Some possible explanations include:1. Recreational activities: The ocean might be a popular destination for beachgoers, surfers, swimmers, or sunbathers, who enjoy spending time in the water and on the sand.2. Tourism: The ocean could be part of a popular tourist destination, attracting visitors from all over the world.3. Events: The ocean might be the location of a special event, such as a beach festival, a concert, or a sports competition, drawing a large crowd of spectators.4. Emergency: The ocean could be the scene of an emergency, such as a natural disaster, a search and rescue operation, or a mass evacuation.In any case, the image does not provide enough information to determine the exact reason for the large number of people on the ocean.
 
 
-## Unified Framework
+## Quantitative Analysis-Unified Framework
 
 In the comparison among the three methods, their individual use of diverse settings and datasets for training makes direct comparisons challenging. To address this, we introduced a unified framework that focuses on evaluating the impact of different architectural designs by incorporating two variable factors.
 
