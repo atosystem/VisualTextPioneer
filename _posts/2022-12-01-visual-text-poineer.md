@@ -106,7 +106,7 @@ For each of the categories, we select one representative work for our blog post.
 In this blog post, we first give detailed introductions to each representative work individually.
 Then we show some qualitative and quantitative analysis done by ourselves and provied some conclusion from those results.
 
-## Methods
+## Method Comparisons
 
 | Categories | Query-based  | Projection-based | Parameter-Efficient Tuning |
 | Selected model | InstructBLIP<d-cite key="instructblip"></d-cite>  | LLaVA<d-cite key="liu2023llava"></d-cite> | LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>
@@ -144,9 +144,12 @@ The Q-Former is pretrained in two stages:
 In this section, we choose BLIP-2<d-cite key="li2023blip2"></d-cite> and its extention InstructBLIP<d-cite key="instructblip"></d-cite> as the represented papers. 
 In BLIP-2, they propose a lightweight Querying Transformer (Q-Former) to bridge the gap between image and text modalities. The learnable queries learn to extract text-related features from the image in pre-trained stage.
 In InstructBLIP, they formulate instruction-tuning dataset and propose a Instruction-aware Visual Feature Extraction to extend Q-Former from BLIP-2.
+
 #### Q-Former
+
 Q-Former is a trainable module to bridge the gap between a frozen image encoder and a frozen LLM. There are two transformer submodules (1) an image transformer and (2) a text transformer that share the same self-attention layers. A set of learnable queries is sent as input to the image transformer, interacting with frozen image features through cross-attention layers. Q-Former is pre-trained in two stages as belows:
-##### Bootstrap Vision-Language Representation Learning from a Frozen Image Encoder
+
+#### Bootstrap Vision-Language Representation Learning from a Frozen Image Encoder
 
 > Extract visual representation that is most informative of the text.
  
@@ -154,32 +157,32 @@ In the representation learning stage, Q-Former is connected to a frozen image en
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/BLIP2_Q-Former_stage1.png" class="img-fluid" %}
 <div class="caption">
-(Left) Model architecture of Q-Former and BLIP-2’s first-stage vision-language representation learning objectives. (Right) The self-attention masking strategy for each objective to control query-text interaction.
+Figure from <d-cite key="li2023blip2"></d-cite>. (Left) Model architecture of Q-Former and BLIP-2’s first-stage vision-language representation learning objectives. (Right) The self-attention masking strategy for each objective to control query-text interaction.
 </div>
 
-##### Image-Text Contrastive Learning (ITC) 
-> Contrastive learning on the output of image and text transformer.
+* Image-Text Contrastive Learning (ITC) 
+  > Contrastive learning on the output of image and text transformer.
 
-It learns to align image and text representations by contrasting the image-text similarity of a positive pairs against negative pairs. Specifically, it aligns the output query representation Z and output [CLS] token in text transformer. Then, compute pair-wise similarity between each query output and [CLS] and select the highest one as the image-text similarity.
+  It learns to align image and text representations by contrasting the image-text similarity of a positive pairs against negative pairs. Specifically, it aligns the output query representation Z and output [CLS] token in text transformer. Then, compute pair-wise similarity between each query output and [CLS] and select the highest one as the image-text similarity.
 
-##### Image-grounded Text Generation (ITG)
-> Given image as condition, generate the text. 
+* Image-grounded Text Generation (ITG)
+  > Given image as condition, generate the text. 
 
-It learns to generate the text from image features extracted by the queries. So the queries are forced to extract visual features that capture all the information about the text. Here it employs causual self-attention mask where the queries cannot attend to the text tokens while the text tokens can attend to all queries and previuos text tokens.
+  It learns to generate the text from image features extracted by the queries. So the queries are forced to extract visual features that capture all the information about the text. Here it employs causual self-attention mask where the queries cannot attend to the text tokens while the text tokens can attend to all queries and previuos text tokens.
 
-##### Image-Text Matching (ITM)
-> Binary classification whether an image-text pair is matched.
+* Image-Text Matching (ITM)
+  > Binary classification whether an image-text pair is matched.
 
-It learns the fine-grained alignment betwen image and text. It uses a bi-directional attention where all queries and text tokens can attend to each other and the output query embeddings with multimodal information will be fed into linear classifier to predict whether the image-text pair is matched(positive) or unmatched(negative). 
+  It learns the fine-grained alignment betwen image and text. It uses a bi-directional attention where all queries and text tokens can attend to each other and the output query embeddings with multimodal information will be fed into linear classifier to predict whether the image-text pair is matched(positive) or unmatched(negative). 
 
-##### Bootstrap Vision-to-Language Generative Learning from a Frozen LLM
+#### Bootstrap Vision-to-Language Generative Learning from a Frozen LLM
 
 In the generative pre-training stage, we connect QFormer(with the frozen image encoder attached) to a frozen LLM. The output query embeddings are projected to the same dimension as the text embeddings of the LLM. Then, the projected query embeddings are prepended to the input text embeddings as 'soft prompt'. 
 There are two types of LLMs: decoder-based and encoder-decoder based as the below figure shows. 
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/BLIP2_Q-Former_stage2.png" class="img-fluid" %}
 <div class="caption">
-BLIP-2’s second-stage vision-to-language generative pre-training.
+Figure from <d-cite key="li2023blip2"></d-cite>. BLIP-2’s second-stage vision-to-language generative pre-training.
 (Top) Bootstrapping a decoder-based LLM (e.g. OPT). (Bottom) Bootstrapping an encoder-decoder-based LLM (e.g. FlanT5).
 </div>
 
@@ -192,15 +195,25 @@ In this paper, the authors conduct a systematic and comprehensive study on visio
 #### Experiment
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/InstructBLIP_zero_shot.png" class="img-fluid" %}
+<div class="caption">
+    Table from <d-cite key="li2023blip2"></d-cite>.
+</div>
 *  Zero-shot Evaluation
     * Achieve new zero-shot SOTA results.
     * Demonstrate the effectiveness of vision-language instruction tuning.
 
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/BLIP2_ablation.png" class="img-fluid" %}
+<div class="caption">
+    Table from <d-cite key="li2023blip2"></d-cite>.
+</div>
+
 * **BLIP-2.** Effect of Vision-Language Representation Learning
 The author shows that without representation learning, which means solely relying on vision-to-language generative learning to bridge the modality gap gives substantially lower performance on zero-shot VQA. 
  
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/InstructBLIP_ablation.png" class="img-fluid" %}
+<div class="caption">
+    Table from <d-cite key="instructblip"></d-cite>.
+</div>
 * **InstructBLIP.** Effect of Instruction-aware Visual Feature Extraction and Balanced Data Sampling strategy
     * Removing instruction awareness from visual features significantly degrades performance across all datasets.This decline is particularly notable in datasets involving spatial (e.g., ScienceQA) or temporal (e.g., iVQA) visual reasoning, where instructions guide attention to informative image regions.
     * The absence of the data balancing strategy leads to unstable and uneven training.
@@ -643,6 +656,10 @@ The following figures show the interactive visualizations of PCA for the three m
 **< Add InstructBLIP PCA figure here >**
 
 <div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/instructblip_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
+
+<div class="l-page">
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
 </div>
 
@@ -657,6 +674,10 @@ The following figures show the interactive visualizations of PCA for the three m
 The following figures show the interactive visualizations of t-SNE for the three models. The figures are in the same order (**Instruct BLIP, LLaVA-1.5 and LLaMA Adapter**).
 
 **< Add InstructBLIP t-SNE figure here >**
+
+<div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/instructblip_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
 
 <div class="l-page">
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
