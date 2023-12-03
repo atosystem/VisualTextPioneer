@@ -653,7 +653,7 @@ In order to visualize the embeddings, we used **PCA** and **t-SNE** methods to r
 
 The following figures show the interactive visualizations of PCA for the three models. The figures are in the following order (**Instruct BLIP, LLaVA-1.5 and LLaMA Adapter**).
 
-**< Add InstructBLIP PCA figure here >**
+<!-- **< Add InstructBLIP PCA figure here >** -->
 
 <div class="l-page">
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/instructblip_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
@@ -673,7 +673,7 @@ The following figures show the interactive visualizations of PCA for the three m
 
 The following figures show the interactive visualizations of t-SNE for the three models. The figures are in the same order (**Instruct BLIP, LLaVA-1.5 and LLaMA Adapter**).
 
-**< Add InstructBLIP t-SNE figure here >**
+<!-- **< Add InstructBLIP t-SNE figure here >** -->
 
 <div class="l-page">
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/instructblip_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
