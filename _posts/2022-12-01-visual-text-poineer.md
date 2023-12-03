@@ -16,7 +16,7 @@ authors:
     affiliations:
       name: University of Texas at Austin
   - name: Muhammad Muaz
-    url: "https://en.wikipedia.org/wiki/Boris_Podolsky"
+    url: "https://www.cs.utexas.edu/~mmuaz/"
     affiliations:
       name: University of Texas at Austin
   - name: Yi-Jen Shih
@@ -42,6 +42,9 @@ toc:
     - name: Quantitative Analysis-ScienceQA
     - name: Qualitative Analysis-Different types of Image and Prompts 
     - name: Qualitative Analysis-Robustness
+    - name: Qualitative Analysis-Embedding Visualizations
+    - name: Quantitative Analysis-Image-to-Text Retrieval
+  - name: Unified Framework
 
 # Below is an example of injecting additional post-specific styles.
 # This is used in the 'Layouts' section of this post.
@@ -577,6 +580,49 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
   * **LLaVA-1.5 (7B) Response:** The image shows a sandy desert landscape with a lone tree and a dune. There are no people visible in the image, so it is not possible to determine why there are so many people on the ocean. The image is focused on the desert environment and the lone tree, and the ocean is not a part of the scene 
   
   * **Llama Adapter Response:** There could be several reasons for the presence of so many people on the ocean. Some possible explanations include:1. Recreational activities: The ocean might be a popular destination for beachgoers, surfers, swimmers, or sunbathers, who enjoy spending time in the water and on the sand.2. Tourism: The ocean could be part of a popular tourist destination, attracting visitors from all over the world.3. Events: The ocean might be the location of a special event, such as a beach festival, a concert, or a sports competition, drawing a large crowd of spectators.4. Emergency: The ocean could be the scene of an emergency, such as a natural disaster, a search and rescue operation, or a mass evacuation.In any case, the image does not provide enough information to determine the exact reason for the large number of people on the ocean.
+
+
+### Qualitative Analysis-Embedding Visualizations
+
+In this section, we wanted to explore how image and text embeddings align in different models and whether that align is beneficial for the model. In that aspect, we generated the image and text embeddings of **VQA-v2** validation dataset, which contains **MS COCO** images with corresponding Questions and Answers. We sampled $$200$$ image text pairs from the former dataset and generated the corresponding visual and textual embeddings using the pre-trained models (Instruct BLIP, LLaVA-1.5 and LLaMA Adapter). These models generate both image and text embeddings of dimensions $$4096$$, respectively. 
+
+In order to visualize the embeddings, we used **PCA** and **t-SNE** methods to reduce the dimensions to $$2$$ and $$3$$, respectively. Before computing the principal components and t-SNE, we concatenated the image and text embeddings (of initial dimensions $$\mathbf{R}^{D \times 4096}$$ where **D** corresponds to number of samples which in our case are $$200$$) across the dim-$$0$$ to obtain a matrix of dimensions $$\mathbf{R}^{2 D \times 4096}$$. We then computed the principal components and t-SNE on the concatenated matrix to obtain the reduced dimensions of $$2$$ and $$3$$, respectively. 
+
+### PCA
+
+The following figures show the interactive visualizations of PCA for the three models. The figures are in the following order (**Instruct BLIP, LLaVA-1.5 and LLaMA Adapter**).
+
+**< Add InstructBLIP PCA figure here >**
+
+<div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_pca_2D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
+
+**< Add LLaMA-Adapter PCA figure here >**
+
+### t-SNE
+
+The following figures show the interactive visualizations of t-SNE for the three models. The figures are in the same order (**Instruct BLIP, LLaVA-1.5 and LLaMA Adapter**).
+
+**< Add InstructBLIP t-SNE figure here >**
+
+<div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
+
+**< Add LLaMA-Adapter t-SNE figure here >**
+
+As, it can seen from the above plots of PCA and t-SNE that for Instruct-BLIP the embeddings are clustered together indicating the text-conditioned training of the model. However, since LLaVA and LLaMA-Adapter does not use text-conditioning while training the visual embedding extractor the embeddings are well separated. 
+
+### Quantitative Analysis-Image-to-Text Retrieval
+In this section, we conducted a study to analyze if we can extract the corresponding text embeddings from the image embeddings in the original mapped space of $$\mathbf{R}^{4096}$$. For that, we used the same setup as explained in the previous section and used the $$200$$ image-text pairs from the validation split of **VQA-v2** dataset. We then computed the cosine similarity for each image embedding with all the text embeddings and extracted the top $$k$$ text embeddings with the highest cosine similarity. We then computed the accuracy of the model by checking if the corresponding text embedding is present in the top $$k$$ text embeddings. The results are shown in the following figure. From the figure, it can be seen that Instruct Blip has the perfect retrieval accuracy which indicates that text conditioning based image embedding extraction is beneficial for the model. However, LLaVA and LLaMA-Adapter have a retrieval accuracy which is at par with the random retrieval accuracy.
+
+<div class="row mt-1">
+   <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/retrieval-acc.png" class="img-fluid rounded" %}
+  </div>
+</div>
+
 
 
 ## Unified Framework
