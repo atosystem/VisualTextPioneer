@@ -78,6 +78,10 @@ The files are organized as the following: ([SUBMISSION NAME]=`visual-text-pionee
 
 * Put your citations into a bibtex file in assets/bibliography/2022-12-01-visual-text-poineer.bib. -->
 
+## TL;DR
+
+We did a blog post to introduce 3 existing type of integrating vision modality into LLM. Additionally, we also conduct both qualitative and quantitative analysis between three methods. 
+
 ## Introduction
 
 <!-- Recent papers have shown the success of adapting LLMs to vision-language tasks with a small amount of fine-tuning required.
@@ -102,6 +106,22 @@ For the second part, we will try to make comparisons between the three methods q
 
 ## Methods
 
+| Categories | Query-based  | Projection-based | Parameter-Efficient Tuning |
+| Selected model | InstructBLIP<d-cite key="instructblip"></d-cite>  | LLaVA<d-cite key="liu2023llava"></d-cite> | LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>
+| -------- | -------- | -------- | -------- |
+| Is the extracted image features conditioned on text? | ✔    | ❌ | ❌ |
+| Where are the two modalities concatenated?  | At the input of LLM    | At the input of LLM | At each adapters in multiple layers of LLM |
+| Is the model pretrained on image-caption dataset?  |  ✔  | ✔ | ❌ |
+| Trainable Params |  188M | 7B | 1.2M |
+| ScienceQA Results (Acc %) | 79.5 | 90.9 | 85.2 |
+
+
+
+<div class="caption">
+Comparison for the three selected models.
+</div>
+
+In the following subsection, we will introduce the details about each selected model.
 
 ### Query-based
 <!-- In BLIP-2<d-cite key="li2023blip2"></d-cite> , they propose a generic and compute-efficient training strategy that bootstraps from off-the-shelf frozen pre-trained vision and language models. To bridge the modality gap, they introduce a lightweight Querying Transformer(Q-Former) that employs a set of learnable queries to extract the most relevant visual features for the LLM to output the desired text. 
