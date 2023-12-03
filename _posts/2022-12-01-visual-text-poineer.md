@@ -44,6 +44,8 @@ toc:
   #   - name: Qualitative Analysis-Robustness
   - name: Qualitative Analysis-Different types of Image and Prompts 
   - name: Qualitative Analysis-Robustness
+  - name: Qualitative Analysis-Embedding Visualizations
+  - name: Quantitative Analysis-Image-to-Text Retrieval
   - name: Quantitative Analysis-Unified Framework
 
 # Below is an example of injecting additional post-specific styles.
@@ -226,6 +228,9 @@ The authors utilized language GPT-4 model to generate visual instruction tuned d
 
 #### LLaVA Model Architecture
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_model_architecture.png" class="img-fluid" %}
+ <div class="caption">
+    Model image taken from <d-cite key="liu2023llava"></d-cite>
+    </div>
 
 As LLaVA model relies on off-the-shelf pretrained vision and language models and these models maps their input to a separate high dimensional space. However, to effectively leverage their capabilites (i.e., jointly use the information captured by vision and language embeddings), the embeddings have to be mapped closer in the same higher dimensional space. For an input image  $$X_v$$, a pre-trained CLIP visual encoder ViT/L-14 is used to extract the visual features $$Z_v = g(X_v)$$. The model uses grid features before and after the last Transformer layer for experiments. To convert, the extracted visual features and to provide conditioning to the text, the features are mapped to the space of text token embeddings via a single linear layer. Specifically, $$ Z_v $$ is converted to $$ H_v $$ via the learnable matrix $$ W $$ i.e., $$ H_v = W * Z_v$$. 
 
@@ -249,6 +254,10 @@ Instruction tuning is performed on LLM on the prediction tokens via the original
 
 #### Experiments
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_base_exp.png" class="img-fluid" %}
+ <div class="caption">
+    Table from <d-cite key="liu2023llava"></d-cite>
+    </div>
+
 The experimental analysis showed that LLaVA achieved SOTA performance on mean accuracy on ScienceQA compared to other methods such as Chain-Of-Thought (COT) and LLaMA-Adapter.
 
 #### LLaVA-1.5 <d-cite key="liu2023improved"></d-cite> 
@@ -261,17 +270,25 @@ The base architecture of LLaVA is kept intact but the following modifications ar
   
 The authors claim that LLaVA model was falling short on academic benchmakrs that typically require short-form answers. They attribute this to the fact that LLaVA has not bben pretrained on large-scale data as other approaches do. The following image studies the scaling effect of data, model and image resolution on a selection of three datasets given in the following table.
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_improved_scaling.png" class="img-fluid" %}
+ <div class="caption">
+    Table from <d-cite key="liu2023improved"></d-cite>
+    </div>
+
 
 Moreover, the authors proposed that to control the length of prompted answer of LLaVA model, they explicitly state that information in the prompt during its fine-training stage which can help the model to learn to control the length of output response. Apart from this, the model is fine-tuned on academic-task-oriented VQA datasets such as open-knowledge VQA, OCR VQA, and region level VQA. Moreover, a two linear layer MLP architecture is used for projecting visual features to text token embedding space. Furthermore, image size is scaled up to $336$ px and LLM model size is scaled to $13$ B.
 
 #### Experiments
 {% include figure.html path="assets/img/2022-12-01-visual-text-poineer/llava_improved_results.png" class="img-fluid" %}
+ <div class="caption">
+    Table from <d-cite key="liu2023improved"></d-cite>
+    </div>
+
 Based on the previous additions to the model, the performance on a total of $12$ benchmarks of academic VQA benchmarks specifically proposed for instruction following LMMs showed that LLaVA-1.5 achieved SOTA performance across $11$ out of $12$ benchmarks.
 
 #### Limitations
 * LLaVA-1.5 is not capable of processing multiple images due to lack of such instruction-following data and limit of context lengths.
 * LLaVA-1.5 problem-solving capabilities can still be limited in certain domains
-* LLaVA-1.5 can suffer from hallucinations and occasionally disseminating misinformation, so, it should be used with caution in critical applications like **medical**
+* LLaVA-1.5 can suffer from hallucinations and occasionally disseminating misinformation, so, it should be used with caution in critical applications like **medical applications**
 
 ### Parameter-Efficient Tuning
 
@@ -613,7 +630,7 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
   * **Llama Adapter Response:** There could be several reasons for the presence of so many people on the ocean. Some possible explanations include:1. Recreational activities: The ocean might be a popular destination for beachgoers, surfers, swimmers, or sunbathers, who enjoy spending time in the water and on the sand.2. Tourism: The ocean could be part of a popular tourist destination, attracting visitors from all over the world.3. Events: The ocean might be the location of a special event, such as a beach festival, a concert, or a sports competition, drawing a large crowd of spectators.4. Emergency: The ocean could be the scene of an emergency, such as a natural disaster, a search and rescue operation, or a mass evacuation.In any case, the image does not provide enough information to determine the exact reason for the large number of people on the ocean.
 
 
-### Qualitative Analysis-Embedding Visualizations
+## Qualitative Analysis-Embedding Visualizations
 
 In this section, we wanted to explore how image and text embeddings align in different models and whether that align is beneficial for the model. In that aspect, we generated the image and text embeddings of **VQA-v2** validation dataset, which contains **MS COCO** images with corresponding Questions and Answers. We sampled $$200$$ image text pairs from the former dataset and generated the corresponding visual and textual embeddings using the pre-trained models (Instruct BLIP, LLaVA-1.5 and LLaMA Adapter). These models generate both image and text embeddings of dimensions $$4096$$, respectively. 
 
@@ -645,7 +662,7 @@ The following figures show the interactive visualizations of t-SNE for the three
 
 As, it can seen from the above plots of PCA and t-SNE that for Instruct-BLIP the embeddings are clustered together indicating the text-conditioned training of the model. However, since LLaVA and LLaMA-Adapter does not use text-conditioning while training the visual embedding extractor the embeddings are well separated. 
 
-### Quantitative Analysis-Image-to-Text Retrieval
+## Quantitative Analysis-Image-to-Text Retrieval
 In this section, we conducted a study to analyze if we can extract the corresponding text embeddings from the image embeddings in the original mapped space of $$\mathbf{R}^{4096}$$. For that, we used the same setup as explained in the previous section and used the $$200$$ image-text pairs from the validation split of **VQA-v2** dataset. We then computed the cosine similarity for each image embedding with all the text embeddings and extracted the top $$k$$ text embeddings with the highest cosine similarity. We then computed the accuracy of the model by checking if the corresponding text embedding is present in the top $$k$$ text embeddings. The results are shown in the following figure. From the figure, it can be seen that Instruct Blip has the perfect retrieval accuracy which indicates that text conditioning based image embedding extraction is beneficial for the model. However, LLaVA and LLaMA-Adapter have a retrieval accuracy which is at par with the random retrieval accuracy.
 
 <div class="row mt-1">
@@ -656,7 +673,6 @@ In this section, we conducted a study to analyze if we can extract the correspon
 
 
 
-## Unified Framework
 ## Quantitative Analysis-Unified Framework
 
 In the comparison among the three methods, their individual use of diverse settings and datasets for training makes direct comparisons challenging. To address this, we introduced a unified framework that focuses on evaluating the impact of different architectural designs by incorporating two variable factors.
