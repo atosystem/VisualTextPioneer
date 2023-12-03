@@ -643,7 +643,7 @@ The following figures show the interactive visualizations of PCA for the three m
 **< Add InstructBLIP PCA figure here >**
 
 <div class="l-page">
-  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_pca_2D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
 </div>
 
 **< Add LLaMA-Adapter PCA figure here >**
