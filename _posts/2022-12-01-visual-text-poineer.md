@@ -646,7 +646,11 @@ The following figures show the interactive visualizations of PCA for the three m
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
 </div>
 
-**< Add LLaMA-Adapter PCA figure here >**
+<!-- **< Add LLaMA-Adapter PCA figure here >** -->
+
+<div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/adapter_pca_2d.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
 
 ### t-SNE
 
@@ -658,7 +662,11 @@ The following figures show the interactive visualizations of t-SNE for the three
   <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/llava_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
 </div>
 
-**< Add LLaMA-Adapter t-SNE figure here >**
+<!-- **< Add LLaMA-Adapter t-SNE figure here >** -->
+
+<div class="l-page">
+  <iframe src="{{ 'assets/html/2022-12-01-visual-text-poineer/adapter_tsne_3D.html' | relative_url }}"  frameborder='0' scrolling='no' height="700px" width="100%"></iframe>
+</div>
 
 As, it can seen from the above plots of PCA and t-SNE that for Instruct-BLIP the embeddings are clustered together indicating the text-conditioned training of the model. However, since LLaVA and LLaMA-Adapter does not use text-conditioning while training the visual embedding extractor the embeddings are well separated. 
 
