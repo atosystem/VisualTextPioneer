@@ -487,3 +487,36 @@ To test the robustness of a multi-modal model, we provide a prompt that is compl
   * **LLaVA-1.5 (7B) Response:** 
   
   * **Llama Adapter Response:** There could be several reasons for the presence of so many people on the ocean. Some possible explanations include:1. Recreational activities: The ocean might be a popular destination for beachgoers, surfers, swimmers, or sunbathers, who enjoy spending time in the water and on the sand.2. Tourism: The ocean could be part of a popular tourist destination, attracting visitors from all over the world.3. Events: The ocean might be the location of a special event, such as a beach festival, a concert, or a sports competition, drawing a large crowd of spectators.4. Emergency: The ocean could be the scene of an emergency, such as a natural disaster, a search and rescue operation, or a mass evacuation.In any case, the image does not provide enough information to determine the exact reason for the large number of people on the ocean.
+
+
+## Unified Framework
+In the comparison among the three methods, their individual use of diverse settings and datasets for training makes direct comparisons challenging. To address this, we introduced a unified framework that focuses on evaluating the impact of different architectural designs by incorporating two variable factors.
+
+As shown in the framework overview, our framework consists of an image encoder, a Q-Former to bridge the extract image features, and a LLM. We used CLIP-ViT for the image encoder and Vicuna-7B for the LLM. Vicuna is a decoder-only Transformer instruction-tuned from LLaMA. Both the image encoder and the LLM are frozen during the training. We used VQAv2 for training and validation.
+
+There are two changing factors in our ablation study:
+1. Text-conditioning on the Q-Former.
+2. Integrating an adapter into multiple LLM layers or merely concatenating image embeddings with text embeddings in the LLM input.
+
+The results are shown below. For the VQAv2 dataset, we've recorded the top-1 accuracy percentages for different models and conditions. When utilizing an adapter, we observed a 61.83% accuracy with conditional text, slightly higher than 61.47% without it. However, removing the conditional text resulted in a decrease to 58.59% without the adapter and an increase to 60.55% with it.
+
+|             | VQAv2 - top-1 accuracy (%) |
+|-------------|---------------------------|
+|             | W/ Adapter | W/O Adapter   |
+| W/ Conditional Text | 61.83       | 61.47         |
+| W/O Conditional Text | 58.59     | 60.55         |
+| LLaVA-1.5 (7B) | xx      | 78.5*          |
+
+From these observations, two conclusions emerge:
+
+1. Text-conditioning marginally improves performance.
+2. The impact of the adapter is contingent on text-conditioning.
+
+The initial conclusion suggests that conditioning on text bolsters the extraction of image features, aligning them more closely with the text for enhanced question-answering capabilities. Regarding the latter, it's plausible that since the adapter adjusts image features across multiple layers, the efficacy is amplified when conditioned on text, ensuring the quality of extracted image embeddings.
+
+
+
+
+
+
+
