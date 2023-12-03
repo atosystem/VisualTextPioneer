@@ -106,7 +106,7 @@ For each of the categories, we select one representative work for our blog post.
 In this blog post, we first give detailed introductions to each representative work individually.
 Then we show some qualitative and quantitative analysis done by ourselves and provied some conclusion from those results.
 
-## Method Comparisons
+## Method 
 
 | Categories | Query-based  | Projection-based | Parameter-Efficient Tuning |
 | Selected model | InstructBLIP<d-cite key="instructblip"></d-cite>  | LLaVA<d-cite key="liu2023llava"></d-cite> | LLaMA-Adapter<d-cite key="zhang2023llamaadapter"></d-cite>
